@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
@@ -46,8 +47,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private bool m_Jumping;
         private AudioSource m_AudioSource;
 
+        private bool isZap = false;
+
         public Animator animator;
-        public Camera camera;
+
+        public GameObject zap;
 
         // Use this for initialization
         private void Start()
@@ -62,6 +66,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
 			m_MouseLook.Init(transform , m_Camera.transform);
+
+            zap.active = false;
+
         }
 
 
@@ -91,8 +98,66 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             isRising = Input.GetKey(KeyCode.Space);
             isSinking = Input.GetKey(KeyCode.LeftShift);
+            isZap = Input.GetKeyDown(KeyCode.Mouse0);
+
+            if (isZap)
+            {
+                StartCoroutine(zappy());
+                isZap = false;
+            }
 
             animator.SetFloat("speed", (Mathf.Abs(Input.GetAxis("Vertical")) + Mathf.Abs(Input.GetAxis("Horizontal"))));
+        }
+
+        IEnumerator zappy()
+        {
+            zap.active = true;
+            yield return new WaitForSeconds(0.03f);
+            zap.active = false;
+            yield return new WaitForSeconds(0.03f);
+
+            zap.active = true;
+            yield return new WaitForSeconds(0.03f);
+            zap.active = false;
+            yield return new WaitForSeconds(0.03f);
+
+            zap.active = true;
+            yield return new WaitForSeconds(0.03f);
+            zap.active = false;
+            yield return new WaitForSeconds(0.03f);
+
+            zap.active = true;
+            yield return new WaitForSeconds(0.03f);
+            zap.active = false;
+            yield return new WaitForSeconds(0.03f);
+
+            zap.active = true;
+            yield return new WaitForSeconds(0.03f);
+            zap.active = false;
+            yield return new WaitForSeconds(0.03f);
+
+            zap.active = true;
+            yield return new WaitForSeconds(0.03f);
+            zap.active = false;
+            yield return new WaitForSeconds(0.03f);
+            zap.active = true;
+            yield return new WaitForSeconds(0.03f);
+            zap.active = false;
+            yield return new WaitForSeconds(0.03f);
+
+            zap.active = true;
+            yield return new WaitForSeconds(0.03f);
+            zap.active = false;
+            yield return new WaitForSeconds(0.03f);
+
+            zap.active = true;
+            yield return new WaitForSeconds(0.03f);
+            zap.active = false;
+            yield return new WaitForSeconds(0.03f);
+
+            zap.active = true;
+            yield return new WaitForSeconds(0.03f);
+            zap.active = false;
         }
 
 

@@ -14,6 +14,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
         [SerializeField] private bool m_IsWalking;
         [SerializeField] private float m_WalkSpeed;
         [SerializeField] private float m_RunSpeed;
+        [SerializeField] private float riseSpeed = 35f;
+        [SerializeField] private bool isRising = false;
+        [SerializeField] private bool isSinking = false;
         [SerializeField] [Range(0f, 1f)] private float m_RunstepLenghten;
         [SerializeField] private float m_JumpSpeed;
         [SerializeField] private float m_StickToGroundForce;
@@ -42,6 +45,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
+
+        public Animator animator;
+        public Camera camera;
 
         // Use this for initialization
         private void Start()
@@ -82,6 +88,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
 
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
+
+            isRising = Input.GetKey(KeyCode.Space);
+            isSinking = Input.GetKey(KeyCode.LeftShift);
+
+            animator.SetFloat("speed", (Mathf.Abs(Input.GetAxis("Vertical")) + Mathf.Abs(Input.GetAxis("Horizontal"))));
         }
 
 
@@ -108,6 +119,16 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             m_MoveDir.x = desiredMove.x*speed;
             m_MoveDir.z = desiredMove.z*speed;
+            if (isRising && !isSinking)
+            {
+                m_MoveDir.y = riseSpeed;
+            } else if ((isRising && isSinking) || (!isRising && !isSinking))
+            {
+                m_MoveDir.y = 0;
+            } else if (isSinking && !isRising)
+            {
+                m_MoveDir.y = -riseSpeed;
+            }
 
 
             if (m_CharacterController.isGrounded)

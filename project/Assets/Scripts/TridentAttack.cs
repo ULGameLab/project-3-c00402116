@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class TridentAttack : MonoBehaviour
 {
+    bool isClick;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +17,14 @@ public class TridentAttack : MonoBehaviour
     void Update()
     {
         
+    }
+
+    void ZapAttack()
+    {
+        if (isClick)
+        {
+
+        }
+        isClick = false;
     }
 }

@@ -8,8 +8,8 @@ using Random = UnityEngine.Random;
 #pragma warning disable 618, 649
 namespace UnityStandardAssets.Characters.FirstPerson
 {
-    [RequireComponent(typeof (CharacterController))]
-    [RequireComponent(typeof (AudioSource))]
+    [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(AudioSource))]
     public class FirstPersonController : MonoBehaviour
     {
         [SerializeField] private bool m_IsWalking;
@@ -48,10 +48,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private AudioSource m_AudioSource;
 
         private bool isZap = false;
+        private bool isStab = false;
 
         public Animator animator;
 
         public GameObject zap;
+        public GameObject trident;
+
+        private int energy = 100;
 
         // Use this for initialization
         private void Start()
@@ -62,10 +66,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_FovKick.Setup(m_Camera);
             m_HeadBob.Setup(m_Camera, m_StepInterval);
             m_StepCycle = 0f;
-            m_NextStep = m_StepCycle/2f;
+            m_NextStep = m_StepCycle / 2f;
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
-			m_MouseLook.Init(transform , m_Camera.transform);
+            m_MouseLook.Init(transform, m_Camera.transform);
 
             zap.active = false;
 
@@ -98,15 +102,29 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             isRising = Input.GetKey(KeyCode.Space);
             isSinking = Input.GetKey(KeyCode.LeftShift);
-            isZap = Input.GetKeyDown(KeyCode.Mouse0);
+            isZap = Input.GetKeyDown(KeyCode.Mouse1);
+            isStab = Input.GetKeyDown(KeyCode.Mouse0);
 
-            if (isZap)
+            if (isZap && energy > 25)
             {
                 StartCoroutine(zappy());
                 isZap = false;
             }
 
+            if (isStab && energy > 3)
+            {
+                animator.SetTrigger("isStab");
+                StartCoroutine(stabby());
+                
+                isStab = false;
+            }
+
             animator.SetFloat("speed", (Mathf.Abs(Input.GetAxis("Vertical")) + Mathf.Abs(Input.GetAxis("Horizontal"))));
+        }
+
+        IEnumerator stabby()
+        {
+            yield return new WaitForSeconds(0.3f);
         }
 
         IEnumerator zappy()

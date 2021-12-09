@@ -6,7 +6,10 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public Image EnergyFill;
+    public Image HealthFill;
     public float maxEnergy = 100;
+    public float maxHealth = 100;
+    public float currentHealth;
     public float currentEnergy;
 
     bool isZap;
@@ -14,12 +17,23 @@ public class UIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        isZap = false;
         currentEnergy = maxEnergy;
         EnergyFill.fillAmount = (currentEnergy / maxEnergy);
+        currentHealth = maxHealth;
+        HealthFill.fillAmount = (currentEnergy / maxEnergy);
     }
 
-    void subtractEnergy(int amount)
+    public void subtractHealth(int amount)
+    {
+        currentHealth -= amount;
+        if (currentHealth < 0)
+        {
+            currentHealth = 0;
+        }
+        HealthFill.fillAmount = (currentHealth / maxHealth);
+    }
+
+    public void subtractEnergy(int amount)
     {
         currentEnergy -= amount;
         if (currentEnergy < 0)
@@ -30,7 +44,7 @@ public class UIManager : MonoBehaviour
         EnergyFill.fillAmount = ( currentEnergy / maxEnergy );
     }
 
-    void addEnergy(int amount)
+    public void addEnergy(int amount)
     {
         currentEnergy += amount;
         if (currentEnergy > maxEnergy)
@@ -45,12 +59,6 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isZap = Input.GetKeyDown(KeyCode.Mouse1);
 
-        if (isZap && currentEnergy > 25)
-        {
-            isZap = false;
-            subtractEnergyTest();
-        }
     }
 }

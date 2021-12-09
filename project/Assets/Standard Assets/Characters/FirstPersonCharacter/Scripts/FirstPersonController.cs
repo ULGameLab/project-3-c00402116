@@ -50,8 +50,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private bool m_Jumping;
         private AudioSource m_AudioSource;
 
-        private bool isZap = false;
-        private bool isStab = false;
+        public bool isZap = false;
+        public bool isStab = false;
 
         public Animator animator;
         public Transform rotRef;
@@ -115,6 +115,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (isZap && energy > 25)
             {
                 StartCoroutine(zappy());
+                uim.subtractEnergy(25);
                 isZap = false;
             }
 
@@ -122,12 +123,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 animator.SetTrigger("isStab");
                 StartCoroutine(stabby());
-                
+                uim.subtractEnergy(3);
                 isStab = false;
             }
+            
 
             animator.SetFloat("speed", (Mathf.Abs(Input.GetAxis("Vertical")) + Mathf.Abs(Input.GetAxis("Horizontal"))));
-            transform.forward = camera.transform.forward;
             trident.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
 
         }
@@ -145,7 +146,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
 
         IEnumerator zappy()
-        {
+        { 
             zap.active = true;
             yield return new WaitForSeconds(0.03f);
             zap.active = false;
@@ -203,12 +204,18 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_NextStep = m_StepCycle + .5f;
         }
 
-        void onTriggerEnter(Collision other)
+        void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.tag == "Energy")
+            if (other.tag == "Energy")
             {
                 Destroy(other.gameObject);
-                
+                uim.addEnergy(20);
+            }
+
+            if (other.tag == "Shark")
+            {
+                Debug.Log("KAUDFHKADNA");
+                uim.subtractHealth(15);
             }
         }
 

@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
     public float maxEnergy = 100;
     public float currentEnergy;
 
-    public bool isZap;
+    bool isZap;
 
     // Start is called before the first frame update
     void Start()
@@ -19,12 +19,10 @@ public class UIManager : MonoBehaviour
         EnergyFill.fillAmount = (currentEnergy / maxEnergy);
     }
 
-    public void subtractEnergy(int amount)
+    void subtractEnergy(int amount)
     {
-        if (currentEnergy >= amount)
-        {
-            currentEnergy -= amount;
-        } else
+        currentEnergy -= amount;
+        if (currentEnergy < 0)
         {
             currentEnergy = 0;
         }
@@ -32,16 +30,16 @@ public class UIManager : MonoBehaviour
         EnergyFill.fillAmount = ( currentEnergy / maxEnergy );
     }
 
-    public void addEnergy(int amount)
+    void addEnergy(int amount)
     {
-        if ((currentEnergy + amount) >= 100) {
-            currentEnergy += amount;
-        } else
+        currentEnergy += amount;
+        if (currentEnergy > maxEnergy)
         {
-            currentEnergy = 100;
+            currentEnergy = maxEnergy;
         }
 
         EnergyFill.fillAmount = (currentEnergy / maxEnergy);
+
     }
 
     // Update is called once per frame
@@ -52,7 +50,7 @@ public class UIManager : MonoBehaviour
         if (isZap && currentEnergy > 25)
         {
             isZap = false;
-            subtractEnergy(25);
+            subtractEnergyTest();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
@@ -12,6 +13,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
     [RequireComponent(typeof(AudioSource))]
     public class FirstPersonController : MonoBehaviour
     {
+        public UIManager uim;
+
         [SerializeField] private bool m_IsWalking;
         [SerializeField] private float m_WalkSpeed;
         [SerializeField] private float m_RunSpeed;
@@ -51,9 +54,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private bool isStab = false;
 
         public Animator animator;
+        public Transform rotRef;
 
         public GameObject zap;
         public GameObject trident;
+        //public Camera camera;
+        public Transform rightHand;
+        public Transform spine;
 
         private int energy = 100;
 
@@ -72,7 +79,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_MouseLook.Init(transform, m_Camera.transform);
 
             zap.active = false;
-
+            uim = FindObjectOfType<UIManager>();
         }
 
 
@@ -120,11 +127,21 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
 
             animator.SetFloat("speed", (Mathf.Abs(Input.GetAxis("Vertical")) + Mathf.Abs(Input.GetAxis("Horizontal"))));
+            transform.forward = camera.transform.forward;
+            trident.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
+
         }
 
         IEnumerator stabby()
         {
-            yield return new WaitForSeconds(0.3f);
+            trident.transform.SetParent(rightHand);
+            trident.transform.localPosition = Vector3.zero;
+            trident.transform.forward = rotRef.transform.forward;
+            yield return new WaitForSeconds(0.43f);
+            trident.transform.SetParent(spine);
+            trident.transform.localPosition = new Vector3(-0.067f, -0.217f, 0.314f);
+            trident.transform.forward = rotRef.transform.forward;
+            
         }
 
         IEnumerator zappy()
@@ -186,6 +203,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_NextStep = m_StepCycle + .5f;
         }
 
+        void onTriggerEnter(Collision other)
+        {
+            if (other.gameObject.tag == "Energy")
+            {
+                Destroy(other.gameObject);
+                
+            }
+        }
 
         private void FixedUpdate()
         {
@@ -214,7 +239,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
 
 
-            if (m_CharacterController.isGrounded)
+            /*if (m_CharacterController.isGrounded)
             {
                 m_MoveDir.y = -m_StickToGroundForce;
 
@@ -229,7 +254,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             else
             {
                 m_MoveDir += Physics.gravity*m_GravityMultiplier*Time.fixedDeltaTime;
-            }
+            }*/
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
 
             ProgressStepCycle(speed);

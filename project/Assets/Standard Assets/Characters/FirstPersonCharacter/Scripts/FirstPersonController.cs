@@ -13,7 +13,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
     [RequireComponent(typeof(AudioSource))]
     public class FirstPersonController : MonoBehaviour
     {
-        public UIManager uim;
+        private UIManager uim;
 
         [SerializeField] private bool m_IsWalking;
         [SerializeField] private float m_WalkSpeed;
@@ -65,6 +65,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         public Transform rightHand;
         public Transform spine;
 
+        private float health = 100f;
         private int energy = 100;
 
         // Use this for initialization
@@ -143,7 +144,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 uim.subtractEnergy(3);
                 isStab = false;
             }
-            
+
+            uim.youdied();
 
             animator.SetFloat("speed", (Mathf.Abs(Input.GetAxis("Vertical")) + Mathf.Abs(Input.GetAxis("Horizontal"))));
             trident.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);

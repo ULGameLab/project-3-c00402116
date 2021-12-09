@@ -11,15 +11,19 @@ public class UIManager : MonoBehaviour
     public float maxHealth = 100;
     public float currentHealth;
     public float currentEnergy;
+    public Text died;
 
     public bool isStunRange = false;
     bool isZap = false;
 
     public shark shark;
 
+    [SerializeField] GameObject self;
+
     // Start is called before the first frame update
     void Start()
     {
+        died.text = "";
         shark = FindObjectOfType<shark>();
         currentEnergy = maxEnergy;
         EnergyFill.fillAmount = (currentEnergy / maxEnergy);
@@ -69,6 +73,15 @@ public class UIManager : MonoBehaviour
     public void endStun()
     {
         isStunRange = false;
+    }
+
+    public void youdied()
+    {
+        if (currentHealth <= 0)
+        {
+            died.text = "YOU DIED";
+            Destroy(self);
+        }
     }
 
     // Update is called once per frame

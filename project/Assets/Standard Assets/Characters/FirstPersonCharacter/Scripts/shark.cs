@@ -82,6 +82,7 @@ public class shark : MonoBehaviour
         {
             rigidbody.velocity = Vector3.zero;
             acceleration = Vector3.zero;
+            getStunned();
         }
 
         velocity += acceleration * Time.deltaTime;

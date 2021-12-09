@@ -12,11 +12,15 @@ public class UIManager : MonoBehaviour
     public float currentHealth;
     public float currentEnergy;
 
-    bool isZap;
+    public bool isStunRange = false;
+    bool isZap = false;
+
+    public shark shark;
 
     // Start is called before the first frame update
     void Start()
     {
+        shark = FindObjectOfType<shark>();
         currentEnergy = maxEnergy;
         EnergyFill.fillAmount = (currentEnergy / maxEnergy);
         currentHealth = maxHealth;
@@ -41,7 +45,7 @@ public class UIManager : MonoBehaviour
             currentEnergy = 0;
         }
 
-        EnergyFill.fillAmount = ( currentEnergy / maxEnergy );
+        EnergyFill.fillAmount = (currentEnergy / maxEnergy);
     }
 
     public void addEnergy(int amount)
@@ -54,6 +58,17 @@ public class UIManager : MonoBehaviour
 
         EnergyFill.fillAmount = (currentEnergy / maxEnergy);
 
+    }
+
+    public void Stun()
+    {
+        isStunRange = true;
+        shark.getStunned();
+    }
+
+    public void endStun()
+    {
+        isStunRange = false;
     }
 
     // Update is called once per frame

@@ -52,6 +52,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         public bool isZap = false;
         public bool isStab = false;
+        public bool isStunRange = false;
+
+        public GameObject camera;
 
         public Animator animator;
         public Transform rotRef;
@@ -112,15 +115,29 @@ namespace UnityStandardAssets.Characters.FirstPerson
             isZap = Input.GetKeyDown(KeyCode.Mouse1);
             isStab = Input.GetKeyDown(KeyCode.Mouse0);
 
-            if (isZap && energy > 25)
+            if (isZap && energy >= 25)
             {
+                energy -= 25;
+                if (energy < 0)
+                {
+                    energy = 0;
+                }
+                uim.Stun();
+
                 StartCoroutine(zappy());
                 uim.subtractEnergy(25);
                 isZap = false;
+
+                uim.endStun();
             }
 
-            if (isStab && energy > 3)
+            if (isStab && energy >= 3)
             {
+                energy -= 3;
+                if (energy < 0)
+                {
+                    energy = 0;
+                }
                 animator.SetTrigger("isStab");
                 StartCoroutine(stabby());
                 uim.subtractEnergy(3);
@@ -146,54 +163,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
 
         IEnumerator zappy()
-        { 
-            zap.active = true;
-            yield return new WaitForSeconds(0.03f);
-            zap.active = false;
-            yield return new WaitForSeconds(0.03f);
-
-            zap.active = true;
-            yield return new WaitForSeconds(0.03f);
-            zap.active = false;
-            yield return new WaitForSeconds(0.03f);
-
-            zap.active = true;
-            yield return new WaitForSeconds(0.03f);
-            zap.active = false;
-            yield return new WaitForSeconds(0.03f);
-
-            zap.active = true;
-            yield return new WaitForSeconds(0.03f);
-            zap.active = false;
-            yield return new WaitForSeconds(0.03f);
-
-            zap.active = true;
-            yield return new WaitForSeconds(0.03f);
-            zap.active = false;
-            yield return new WaitForSeconds(0.03f);
-
-            zap.active = true;
-            yield return new WaitForSeconds(0.03f);
-            zap.active = false;
-            yield return new WaitForSeconds(0.03f);
-            zap.active = true;
-            yield return new WaitForSeconds(0.03f);
-            zap.active = false;
-            yield return new WaitForSeconds(0.03f);
-
-            zap.active = true;
-            yield return new WaitForSeconds(0.03f);
-            zap.active = false;
-            yield return new WaitForSeconds(0.03f);
-
-            zap.active = true;
-            yield return new WaitForSeconds(0.03f);
-            zap.active = false;
-            yield return new WaitForSeconds(0.03f);
-
-            zap.active = true;
-            yield return new WaitForSeconds(0.03f);
-            zap.active = false;
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                zap.active = true;
+                yield return new WaitForSeconds(0.04f);
+                zap.active = false;
+                yield return new WaitForSeconds(0.04f);
+            }       
         }
 
 
